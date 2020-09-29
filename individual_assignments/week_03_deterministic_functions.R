@@ -57,3 +57,19 @@ plot(dat_habitat$slope, dat_habitat$ba.tot, xlab = "Slope in Percent", ylab = "T
 curve(line_point_slope(x, x1 = 10, y1 = 25, slope = .5), add = TRUE)
 dev.off()
 
+
+#plot all three to one file
+
+
+png(filename = ("scatter_all.png"), width = 800, height = 1800)
+par(mfrow=c(1,3))
+plot(dat_habitat$elev, dat_habitat$ba.tot, xlab = "Elevation (m)", ylab = "Total Basal Area (m^2/ha)", main = "Basal Area by Elevation")
+curve(line_point_slope(x, x1 = 400, y1 = 25, slope =0), add = TRUE)
+plot(dat_habitat$aspect, dat_habitat$ba.tot, xlab = "Aspect in Degrees", ylab = "Total Basal Area (m^2/ha)", main =  "Basal Area by Aspect")
+curve(line_point_slope(x, x1 = 25, y1 = 25, slope =0.03), add = TRUE)
+plot(dat_habitat$slope, dat_habitat$ba.tot, xlab = "Slope in Percent", ylab = "Total Basal Area (m^2/ha)", main = "Basal Area by Slope")
+curve(line_point_slope(x, x1 = 10, y1 = 25, slope = .04), add = TRUE)
+dev.off()
+
+
+
