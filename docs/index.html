@@ -1550,9 +1550,6 @@ div.tocify {
 <h1>Introduction</h1>
 <p>This page will review the R code that can be useful in statistical exploration and analysis, and some examples of the implementation of this code.</p>
 <p>Functions for data structure, numerical data exploration, graphical data exploration, distributions and others will be covered. This page can serve as both a primer in R and a reference for future statistical analyses.</p>
-<div id="test" class="section level3">
-<h3>test</h3>
-</div>
 </div>
 <div id="functions-1-data-structure-functions" class="section level1 tabset tabset-pills">
 <h1>Functions 1: Data Structure Functions</h1>
@@ -1589,7 +1586,7 @@ print(char_vec)</code></pre>
 <ul>
 <li>Rows must be of the same length</li>
 <li>Data stored can be factor, numeric, or character type</li>
-<li>Colums must be of the same data type</li>
+<li>Columns must be of the same data type</li>
 </ul>
 <p>The data frame can be defined by defining each column, as shown below:</p>
 <pre class="r"><code>## build a data frame from scratch
@@ -1870,30 +1867,211 @@ hist(penguins$flipper_length_mm,
 <h1>Functions 4: Distribution Functions</h1>
 <div id="dnorm" class="section level2">
 <h2><code>dnorm()</code></h2>
+<p>The function <code>dnorm()</code> can be used to calculate the probability density of a normal distribution!</p>
+<ul>
+<li>For example:</li>
+</ul>
+<pre class="r"><code>## The following will return the height of the curve of the normal distribution
+## at X = 12
+## for a normal distribution where the mean is 18 and the standard deviation is 6:
+
+dnorm(12, mean = 18, sd = 6)</code></pre>
+<pre><code>## [1] 0.04032845</code></pre>
 </div>
 <div id="pnorm" class="section level2">
 <h2><code>pnorm()</code></h2>
+<p>The function <code>pnorm()</code> returns the cumulative density for a normal distribution!</p>
+<ul>
+<li><code>pnorm()</code> gives me the value of the probability of observing <code>x</code> or <em>less</em></li>
+</ul>
+<pre class="r"><code>## What is the probability of observing a value less than 15 in a normal distribution with a mean of 18 and a standard deviation of 6
+
+pnorm(15, mean = 18, sd = 6)</code></pre>
+<pre><code>## [1] 0.3085375</code></pre>
+<p>In this case we return 30.85% probability!</p>
 </div>
 <div id="qnorm" class="section level2">
 <h2><code>qnorm()</code></h2>
+<p>The function <code>qnorm()</code> returns the value at a quantile of a normal distribution!</p>
+<ul>
+<li><code>qnorm()</code> gives me the value at the specified percentile, <code>p</code></li>
+<li>percentile argument must be given as a decimal</li>
+</ul>
+<pre class="r"><code>## What is the value at the 31% percentile for a standard distribution with a mean of 18 and a standard deviation of 6?
+
+qnorm(0.31, mean = 18, sd = 6)</code></pre>
+<pre><code>## [1] 15.0249</code></pre>
+<p>Here, we return something close to 15.</p>
 </div>
 <div id="dbinom" class="section level2">
 <h2><code>dbinom()</code></h2>
+<p>Similar to <code>dnorm()</code>, the function <code>dbinom()</code> returns probability, but returns it for a binomial distribution. In a binomial distribution, we call it probability mass instead of density.</p>
+<ul>
+<li><code>dbinom()</code> will give us the probability of observing a value (x) in a binomial distribution:</li>
+</ul>
+<pre class="r"><code>## what is the probability of observing 5 successes (x), in a binomial distribution with twenty trials (size) and a success rate of 25% (prob)
+
+dbinom(5, size = 20, prob = .25)</code></pre>
+<pre><code>## [1] 0.2023312</code></pre>
+<p>Here we get an answer close to 20%</p>
 </div>
 <div id="qbinom" class="section level2">
 <h2><code>qbinom()</code></h2>
+<p><code>qbinom()</code> is a function that give us the quantile of a binomial distribution</p>
+<ul>
+<li>We can use <code>qbinom()</code> to return the value at a quantile of a binomial distribution:</li>
+</ul>
+<pre class="r"><code>## what is the 20th quantile of a binomial distribution with a size of 20 and a probability of 25%?
+
+qbinom(.20, size = 20, prob = .25)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<p>And the answer is 3.</p>
 </div>
 </div>
 <div id="functions-5-other-functions" class="section level1 tabset tabset-pills">
 <h1>Functions 5: Other Functions</h1>
 <div id="subset" class="section level2">
 <h2><code>subset()</code></h2>
+<p>The function <code>subset()</code> can be used to isolate data from a data frame.</p>
+<pre class="r"><code>## import penguins data
+require(palmerpenguins)
+
+## summarize the data to look for something to subset:
+summary(penguins)</code></pre>
+<pre><code>##       species          island    bill_length_mm  bill_depth_mm  
+##  Adelie   :152   Biscoe   :168   Min.   :32.10   Min.   :13.10  
+##  Chinstrap: 68   Dream    :124   1st Qu.:39.23   1st Qu.:15.60  
+##  Gentoo   :124   Torgersen: 52   Median :44.45   Median :17.30  
+##                                  Mean   :43.92   Mean   :17.15  
+##                                  3rd Qu.:48.50   3rd Qu.:18.70  
+##                                  Max.   :59.60   Max.   :21.50  
+##                                  NA&#39;s   :2       NA&#39;s   :2      
+##  flipper_length_mm  body_mass_g       sex           year     
+##  Min.   :172.0     Min.   :2700   female:165   Min.   :2007  
+##  1st Qu.:190.0     1st Qu.:3550   male  :168   1st Qu.:2007  
+##  Median :197.0     Median :4050   NA&#39;s  : 11   Median :2008  
+##  Mean   :200.9     Mean   :4202                Mean   :2008  
+##  3rd Qu.:213.0     3rd Qu.:4750                3rd Qu.:2009  
+##  Max.   :231.0     Max.   :6300                Max.   :2009  
+##  NA&#39;s   :2         NA&#39;s   :2</code></pre>
+<pre class="r"><code>## create a subset!
+dat_adelie &lt;- subset(penguins, species == &quot;Adelie&quot;)
+
+## test the subset
+head(dat_adelie)</code></pre>
+<pre><code>## # A tibble: 6 x 8
+##   species island bill_length_mm bill_depth_mm flipper_length_~ body_mass_g sex  
+##   &lt;fct&gt;   &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;            &lt;int&gt;       &lt;int&gt; &lt;fct&gt;
+## 1 Adelie  Torge~           39.1          18.7              181        3750 male 
+## 2 Adelie  Torge~           39.5          17.4              186        3800 fema~
+## 3 Adelie  Torge~           40.3          18                195        3250 fema~
+## 4 Adelie  Torge~           NA            NA                 NA          NA &lt;NA&gt; 
+## 5 Adelie  Torge~           36.7          19.3              193        3450 fema~
+## 6 Adelie  Torge~           39.3          20.6              190        3650 male 
+## # ... with 1 more variable: year &lt;int&gt;</code></pre>
+<p>Here we have subsetted the penguin data into just one species, Adelie.</p>
 </div>
 <div id="library-and-require" class="section level2">
 <h2><code>library() and require()</code></h2>
+<p>The <code>library()</code> and <code>require()</code> functions can be used to import pre=installed code and datasets that come with R. These are called packages.</p>
+<ul>
+<li>The first time you access a package, you should use <code>install.packages()</code> to bring it in to R</li>
+<li>They can be used interchangeably but <code>require()</code> is necessary for use inside of a function</li>
+</ul>
+<pre class="r"><code>## Using library() to load a package of code that we need:
+library(stats)
+
+## This is the package that we have been using for our distribution functions. Here we can see a description:
+packageDescription(&quot;stats&quot;)</code></pre>
+<pre><code>## Package: stats
+## Version: 4.0.2
+## Priority: base
+## Title: The R Stats Package
+## Author: R Core Team and contributors worldwide
+## Maintainer: R Core Team &lt;R-core@r-project.org&gt;
+## Description: R statistical functions.
+## License: Part of R 4.0.2
+## Imports: utils, grDevices, graphics
+## Suggests: MASS, Matrix, SuppDists, methods, stats4
+## NeedsCompilation: yes
+## Built: R 4.0.2; x86_64-w64-mingw32; 2020-06-22 08:44:20 UTC; windows
+## 
+## -- File: C:/Program Files/R/R-4.0.2/library/stats/Meta/package.rds</code></pre>
+<pre class="r"><code>## another package that we have been relying heavily upon is the palmer penguins data package
+library(palmerpenguins)
+
+## this package has supplied us with our penguin data
+packageDescription(&quot;palmerpenguins&quot;)</code></pre>
+<pre><code>## Package: palmerpenguins
+## Title: Palmer Archipelago (Antarctica) Penguin Data
+## Version: 0.1.0
+## Date: 2020-07-11
+## Authors@R: c( person(given = &quot;Allison&quot;, family = &quot;Horst&quot;, role =
+##         c(&quot;aut&quot;, &quot;cre&quot;), email = &quot;ahorst@ucsb.edu&quot;, comment = c(ORCID =
+##         &quot;0000-0002-6047-5564&quot;)), person(given = &quot;Alison&quot;, family =
+##         &quot;Hill&quot;, role = c(&quot;aut&quot;), email = &quot;apresstats@gmail.com&quot;,
+##         comment = c(ORCID = &quot;0000-0002-8082-1890&quot;)), person(given =
+##         &quot;Kristen&quot;, family = &quot;Gorman&quot;, role = c(&quot;aut&quot;), email =
+##         &quot;kbgorman@alaska.edu&quot;, comment = c(ORCID =
+##         &quot;0000-0002-0258-9264&quot;)) )
+## Description: Size measurements, clutch observations, and blood isotope
+##         ratios for adult foraging Adélie, Chinstrap, and Gentoo
+##         penguins observed on islands in the Palmer Archipelago near
+##         Palmer Station, Antarctica. Data were collected and made
+##         available by Dr. Kristen Gorman and the Palmer Station Long
+##         Term Ecological Research (LTER) Program.
+## License: CC0
+## Encoding: UTF-8
+## LazyData: true
+## RoxygenNote: 7.1.1
+## Depends: R (&gt;= 2.10)
+## Suggests: knitr, rmarkdown, tibble, ggplot2, dplyr, tidyr, recipes
+## URL: https://allisonhorst.github.io/palmerpenguins/,
+##         https://github.com/allisonhorst/palmerpenguins
+## BugReports: https://github.com/allisonhorst/palmerpenguins/issues
+## NeedsCompilation: no
+## Packaged: 2020-07-16 21:52:10 UTC; ahorst
+## Author: Allison Horst [aut, cre]
+##         (&lt;https://orcid.org/0000-0002-6047-5564&gt;), Alison Hill [aut]
+##         (&lt;https://orcid.org/0000-0002-8082-1890&gt;), Kristen Gorman [aut]
+##         (&lt;https://orcid.org/0000-0002-0258-9264&gt;)
+## Maintainer: Allison Horst &lt;ahorst@ucsb.edu&gt;
+## Repository: CRAN
+## Date/Publication: 2020-07-23 15:20:05 UTC
+## Built: R 4.0.2; ; 2020-09-05 03:09:28 UTC; windows
+## 
+## -- File: C:/Users/Michelle/Documents/R/win-library/4.0/palmerpenguins/Meta/package.rds</code></pre>
 </div>
 <div id="read.csv" class="section level2">
 <h2><code>read.csv()</code></h2>
+<p>The function <code>read.csv()</code> is used to import data from a local csv file:</p>
+<pre class="r"><code>### Import data using read.csv function
+
+dat_delomys &lt;- read.csv(&quot;data/delomys.csv&quot;)
+
+summary(dat_delomys)</code></pre>
+<pre><code>##        X            genus             binomial           body_mass     
+##  Min.   :27526   Length:1585        Length:1585        Min.   :  5.00  
+##  1st Qu.:27950   Class :character   Class :character   1st Qu.: 35.00  
+##  Median :28348   Mode  :character   Mode  :character   Median : 43.00  
+##  Mean   :28371                                         Mean   : 44.06  
+##  3rd Qu.:28790                                         3rd Qu.: 54.00  
+##  Max.   :35552                                         Max.   :105.00  
+##   body_length        age                sex              longitude        
+##  Min.   : 49.0   Length:1585        Length:1585        Min.   :-49681671  
+##  1st Qu.:106.0   Class :character   Class :character   1st Qu.:      -50  
+##  Median :116.0   Mode  :character   Mode  :character   Median :      -50  
+##  Mean   :114.7                                         Mean   :   -62739  
+##  3rd Qu.:124.0                                         3rd Qu.:      -47  
+##  Max.   :265.0                                         Max.   :      -41  
+##     latitude            status         
+##  Min.   :-22383667   Length:1585       
+##  1st Qu.:      -29   Class :character  
+##  Median :      -29   Mode  :character  
+##  Mean   :   -28272                     
+##  3rd Qu.:      -24                     
+##  Max.   :      -20</code></pre>
+<p>Using <code>summary()</code>, we can see that the data did indeed import.</p>
 </div>
 </div>
 <div id="part-2-data-anaylsis" class="section level1">

@@ -48,7 +48,7 @@ This page will review the R code that can be useful in statistical exploration a
 
 Functions for data structure, numerical data exploration, graphical data exploration, distributions and others will be covered. This page can serve as both a primer in R and a reference for future statistical analyses. 
 
-### test
+
 
 # Functions 1: Data Structure Functions {.tabset .tabset-pills}
 
@@ -95,7 +95,7 @@ A data frame contains columns and rows, where each column contains the same numb
 
 - Rows must be of the same length
 - Data stored can be factor, numeric, or character type
-- Colums must be of the same data type
+- Columns must be of the same data type
 
 The data frame can be defined by defining each column, as shown below:
   
@@ -327,7 +327,7 @@ require(palmerpenguins)
 plot(
   bill_length_mm ~ body_mass_g,
   data = penguins,
-  pch = 7)
+  pch = 8)
 
 
 ```
@@ -420,15 +420,87 @@ hist(penguins$flipper_length_mm,
 
 ## `dnorm()`
 
-The function `dnorm()` can be used 
+The function `dnorm()` can be used to calculate the probability density of a normal distribution!
+
+- For example:
+```{r}
+
+## The following will return the height of the curve of the normal distribution
+## at X = 12
+## for a normal distribution where the mean is 18 and the standard deviation is 6:
+
+dnorm(12, mean = 18, sd = 6)
+
+```
+
 
 ## `pnorm()`
 
+The function `pnorm()` returns the cumulative density for a normal distribution! 
+
+- `pnorm()` gives me the value of the probability of observing `x` or *less*
+
+```{r}
+## What is the probability of observing a value less than 15 in a normal distribution with a mean of 18 and a standard deviation of 6
+
+pnorm(15, mean = 18, sd = 6)
+
+```
+
+In this case we return 30.85% probability!
+
+
+
 ## `qnorm()`
+
+The function `qnorm()` returns the value at a quantile of a normal distribution!
+
+- `qnorm()` gives me the value at the specified percentile, `p`
+- percentile argument must be given as a decimal 
+
+
+```{r}
+## What is the value at the 31% percentile for a standard distribution with a mean of 18 and a standard deviation of 6?
+
+qnorm(0.31, mean = 18, sd = 6)
+
+```
+
+Here, we return something close to 15.
 
 ## `dbinom()`
 
+Similar to `dnorm()`, the function `dbinom()` returns probability, but returns it for a binomial distribution. In a binomial distribution, we call it probability mass instead of density.
+
+- `dbinom()` will give us the probability of observing a value (x) in a binomial distribution:
+
+
+
+```{r dbinom}
+
+## what is the probability of observing 5 successes (x), in a binomial distribution with twenty trials (size) and a success rate of 25% (prob)
+
+dbinom(5, size = 20, prob = .25)
+
+```
+
+Here we get an answer close to 20%
+
 ## `qbinom()`
+
+`qbinom()` is a function that give us the quantile of a binomial distribution
+
+- We can use `qbinom()` to return the value at a quantile of a binomial distribution:
+
+```{r qbinom}
+
+## what is the 20th quantile of a binomial distribution with a size of 20 and a probability of 25%?
+
+qbinom(.20, size = 20, prob = .25)
+
+```
+And the answer is 3.
+
 
 
 
@@ -436,10 +508,66 @@ The function `dnorm()` can be used
 
 ## `subset()`
 
+The function `subset()` can be used to isolate data from a data frame.
+
+
+```{r}
+## import penguins data
+require(palmerpenguins)
+
+## summarize the data to look for something to subset:
+summary(penguins)
+
+## create a subset!
+dat_adelie <- subset(penguins, species == "Adelie")
+
+## test the subset
+head(dat_adelie)
+
+```
+
+Here we have subsetted the penguin data into just one species, Adelie.
+
 ## `library() and require()`
+
+The `library()` and `require()` functions can be used to import pre-installed code and datasets that come with R. These are called packages. 
+
+- The first time you access a package, you should use `install.packages()` to bring it in to R
+- They can be used interchangeably but `require()` is necessary for use inside of a function
+
+
+```{r}
+## Using library() to load a package of code that we need:
+library(stats)
+
+## This is the package that we have been using for our distribution functions. Here we can see a description:
+packageDescription("stats")
+
+## another package that we have been relying heavily upon is the palmer penguins data package
+library(palmerpenguins)
+
+## this package has supplied us with our penguin data
+packageDescription("palmerpenguins")
+
+```
+
 
 ## `read.csv()`
 
+The function `read.csv()` is used to import data from a local csv file:
+
+```{r read.csv}
+
+### Import data using read.csv function
+
+dat_delomys <- read.csv("data/delomys.csv")
+
+summary(dat_delomys)
+
+```
+
+
+Using `summary()`, we can see that the data did indeed import.
 
 
 
