@@ -1,7 +1,7 @@
 ---
-title: "ECo 602 Final Project"
+title: "Eco 602 Final Project"
 subtitle: "Final Project"
-author: "Michelle"
+author: "Michelle Marasco"
 date: "10/15/2020"
 output:
   html_document:
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(message = FALSE)
 options(knitr.duplicate.label = TRUE)
 ```
 
-Everything above this line is the header.
+<!-- Everything above this line is the header. -->
 
 
 <!-- The following text won't be displayed in your document.  It tells R how to make nicer looking buttons for your tabbed content. -->
@@ -41,36 +41,26 @@ Everything above this line is the header.
 </style>
 
 
-Use this document as a template to build your final project.
-
-If you've already created the file index.Rmd in your docs folder, you can paste everything below the header into that document.
-
-If you don't yet have an index.Rmd file, save this document as index.Rmd in the docs folder of your main class folder.
-
-Edit this template to fill in your own content.
-
 
 # Introduction
 
-Type a brief introduction here.
+This page will review the R code that can be useful in statistical exploration and analysis, and some examples of the implementation of this code. 
 
+Functions for data structure, numerical data exploration, graphical data exploration, distributions and others will be covered. This page can serve as both a primer in R and a reference for future statistical analyses. 
+
+### test
 
 # Functions 1: Data Structure Functions {.tabset .tabset-pills}
 
-Look at the source code for the final project template, you'll notice the text:
-
-{.tabset .tabset-pills}
-
-This creates tabbed content for all the following sections that are one-level below.
-
-- If you include them on a primary header (one #), all of the subsequent secondary headers will in tabs.
+<!-- Look at the source code for the final project template, you'll notice the text: -->
+<!-- {.tabset .tabset-pills} -->
+<!-- This creates tabbed content for all the following sections that are one-level below. -->
+<!-- - If you include them on a primary header (one #), all of the subsequent secondary headers will in tabs. -->
 
 
 
 
 ## `c()`
-
-The following is the markdown text needed to reproduce my code example for `c()`:
 
 
 The function `c()` *combines* or *concatenates* its arguments into a vector (a 1-dimensional data structure consisting of 1 or more elements).
@@ -101,16 +91,22 @@ print(char_vec)
 
 ## `data.frame()`
 
-Here is more text for the data frame section!
+A data frame contains columns and rows, where each column contains the same number of items. I can create a data frame using the function `data.frame()`
 
-A data frame contains columns .......
+- Rows must be of the same length
+- Data stored can be factor, numeric, or character type
+- Colums must be of the same data type
+
+The data frame can be defined by defining each column, as shown below:
+  
+
 
 ```{r}
 ## build a data frame from scratch
 
 dat_1 <- data.frame(
   letters = c("f", "t", "w"),
-  numbers_1 = c(42,6, 31415986))
+  numbers_1 = c(42,6, 31415956))
 
 ## I can print the contents by typing the name of the data frame
 
@@ -120,7 +116,7 @@ dat_1
 
 Some ways to subset a data frame:
 
-- If I know the name of a column, I can use $
+- If I know the name of a column, I can use `$`
 
 
 ```{r}
@@ -130,7 +126,7 @@ dat_1$letters
 
 ```
 
-- You can also subset a data frame, using subset() !
+- You can also subset a data frame, using `subset()` !
 
 ```{r}
 ## Creating a subset using subset()
@@ -144,28 +140,169 @@ sub_1
 
 ## `matrix()`
 
-Type your matrix example here.
+A matrix is a two dimensional data structure that can be created using the function `matrix()`.
+
+A matrix has a defined dimension and must be comprised of a single data type.
+
+- a matrix may be created from a vector by applying a dimension
+
+
+```{r}
+
+## Create a matrix from scratch
+
+new_matrix <- matrix(1:18, nrow = 6, ncol = 3) 
+
+## the first argument is the data for the matrix
+## nrow and ncol define the dimensions, only one is required
+
+##display new matrix
+
+new_matrix
+
+```
+
+
 
 
 ## `length()`
 
+The function `length()` either retrieves or sets the length of an object. 
+
+```{r}
+## Use length() to retrieve a length
+
+vect <- c(1:18)
+length(vect)
+
+```
+
+```{r}
+## Use length() to set the length
+## Establish and print vector
+
+vect <- c(1:18)
+vect
+
+## set the length
+
+
+length(vect) <- 9
+vect
+
+```
 
 ## `nrow()`
 
+The function `nrow()` either sets or retrieves the number of rows in a matrix:
+```{r}
+
+##nrow() can set the rows:
+matrix <- matrix(18:35, nrow = 6)
+matrix
+
+##and nrow() can retrieve the rows:
+
+nrow(matrix)
+
+```
+
+
 
 ## `ncol()`
+The function `ncol()` either sets or retrieves the number of columns in a matrix:
+```{r}
+## ncol() can set the columns:
+
+matrix <- matrix(18:35, ncol = 6)
+matrix
+
+## and ncol() can retrieve the columns:
+
+ncol(matrix)
+
+```
+
 
 
 ## `dim()`
+
+To create a matrix from a vector, use the function `dim()`:
+
+
+```{r}
+## To create a matrix from a vector, first establish the vector:
+
+vect <- c(1:18)
+
+## Then apply dimension using dim()
+
+dim(vect) <- c(3,6)
+
+vect
+
+```
+
+Similar to `length()`, `dim()` can also be used to retrieve the dimensions of something:
+
+```{r}
+matrix <- matrix(18:35, ncol = 6)
+
+dim(matrix)
+
+```
 
 
 # Functions 2: Numerical Data Exploration  {.tabset .tabset-pills}
 
 ## `summary()`
 
+To get a brief synopsis of an object, I can use the function `summary()`:
+
+```{r}
+## load the palmerpenguins package
+require(palmerpenguins)
+
+## demonstrate
+summary(penguins)
+```
+
+This can be very useful in an initial exploration of your data
+
+
 ## `mean()`
 
+The `mean()` function can be used to retrieve the mean of a set of data:
+
+```{r}
+## load the palmerpenguins package
+require(palmerpenguins)
+
+
+##demonstrate
+## the argument na.rm removes NA values in this calculation
+
+mean(penguins$flipper_length_mm, na.rm = TRUE)
+
+
+```
+
+
+
 ## `sd()`
+
+The `sd()` function calculates standard deviation:
+
+```{r}
+## load the palmerpenguins package
+require(palmerpenguins)
+
+## demonstrate
+## the argument na.rm removes NA values in this calculation
+
+sd(penguins$flipper_length_mm, na.rm = TRUE)
+```
+
  
 
 
@@ -173,9 +310,11 @@ Type your matrix example here.
 
 See the final project description for a list of the required functions.
 
-## plot()
+## `plot()`
 
-I can use plot() to create scatterplots!
+
+I can use `plot()` to create scatterplots! 
+
 
 ```{r scatterplot_1, fig.asp = 0.7}
 
@@ -188,57 +327,140 @@ require(palmerpenguins)
 plot(
   bill_length_mm ~ body_mass_g,
   data = penguins,
-  pch = 16)
+  pch = 7)
 
 
 ```
 
-## boxplot()
+## `boxplot()`
+
+The function `boxplot()` can be used to create boxplots!
+
+- This can be used to plot both conditional and simple boxplots:
+
+```{r}
+
+## Load the palmerpenguins package:
+require(palmerpenguins)
+
+## a single boxplot:
+boxplot(penguins$flipper_length_mm, 
+        main = "Flipper Length (mm)",
+        ylab = "length")  ## here the main and ylab arguments are providing labels
+
+## A conditional boxplot :
+boxplot(flipper_length_mm ~ species, data = penguins, 
+        ## the first argument tells it which data to plot and which 
+        ## to condition it by, using the ~ (tilda)
+        main = "Flipper Length by Species",
+        ## again, labels
+        ylab = "Flipper Length (mm)")
+
+```
 
 
-## hist()
 
-## par() and mfrow=
+## `hist()`
 
+I can create a histogram using the function `hist()`!
+
+```{r}
+## import the penguin data:
+require(palmerpenguins)
+
+## create a histogram
+hist(penguins$flipper_length_mm,
+     main = "Histogram of Flipper Length",
+     xlab = "Flipper Length (mm)")
+
+```
+
+`hist` has many arguments, but one important one is `breaks =`:
+
+- set the argument `breaks` to alter the number of bins in your histogram:
+
+
+```{r}
+
+## make a histogram with 40 bins:
+
+hist(penguins$flipper_length_mm,
+     breaks = 40, ## here I specify the breaks
+     main = "Histogram of Flipper Length",
+     xlab = "Flipper Length (mm)")
+
+```
+
+## `par() and mfrow=`
+
+The function `par()` with the argument `mfrow=` can be used to plot more than one graph at a time!
+
+- This can be useful to combine more than one graph
+- `mfrow=` uses a vector:
+
+```{r fig.asp = 1}
+## this is how to implement the par() function:
+
+par(mfrow = c(1,2)) ##mfrow describes the layout. Here, 1X2
+## The graphs following par() will be plotted together
+boxplot(flipper_length_mm ~ species, data = penguins, 
+        main = "Flipper Length by Species",
+        ylab = "Flipper Length (mm)")
+hist(penguins$flipper_length_mm,
+     breaks = 40,
+     main = "Histogram of Flipper Length",
+     xlab = "Flipper Length (mm)")
+
+```
 
 
 
 
 # Functions 4: Distribution Functions {.tabset .tabset-pills}
 
-See the final project description for a list of the required functions.
+## `dnorm()`
+
+The function `dnorm()` can be used 
+
+## `pnorm()`
+
+## `qnorm()`
+
+## `dbinom()`
+
+## `qbinom()`
 
 
 
 # Functions 5: Other Functions {.tabset .tabset-pills}
 
-See the final project description for a list of the required functions.
+## `subset()`
+
+## `library() and require()`
+
+## `read.csv()`
 
 
 
 
 # Part 2: Data Anaylsis
 
-Your data analysis materials will go here.
+## Numerical Exploration
+
+## Graphical Exploration
+
+## Model Building
+
+## Model Diagnostics
+
+## Model Interpretation
+
+## Model Comparison : Body Mass
 
 
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
-```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
