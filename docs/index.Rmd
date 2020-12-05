@@ -137,6 +137,17 @@ sub_1
 
 ```
 
+To access a particular location within a data frame, I can use square brackets!
+
+```{r}
+## access a location within a dataframe
+
+dat_1[3,2] ##Accesses location in the data frame at row 3, column 2
+
+```
+
+Don't forget that the Index starts at 1!!
+
 
 ## `matrix()`
 
@@ -147,7 +158,7 @@ A matrix has a defined dimension and must be comprised of a single data type.
 - a matrix may be created from a vector by applying a dimension
 
 
-```{r}
+```{r matrix()}
 
 ## Create a matrix from scratch
 
@@ -162,6 +173,16 @@ new_matrix
 
 ```
 
+Square brackets can also be used on a matrix to access a specific location:
+
+
+```{r square brax}
+
+## access the value at row four and column three of the new matrix
+
+new_matrix[4,3]
+
+```
 
 
 
@@ -327,7 +348,7 @@ require(palmerpenguins)
 plot(
   bill_length_mm ~ body_mass_g,
   data = penguins,
-  pch = 8)
+  pch = 6)
 
 
 ```
@@ -562,6 +583,7 @@ The function `read.csv()` is used to import data from a local csv file:
 
 dat_delomys <- read.csv("data/delomys.csv")
 
+## Test the import
 summary(dat_delomys)
 
 ```
@@ -573,17 +595,272 @@ Using `summary()`, we can see that the data did indeed import.
 
 # Part 2: Data Anaylsis
 
+Now that it is imported, we will preform a data analysis on the Delomys data.
+
 ## Numerical Exploration
+We will start with a numerical exploration:
 
-## Graphical Exploration
+### Summary of `dat_delomys`:
+```{r delomys summary, echo=FALSE}
 
-## Model Building
+## Show a summary of the delomys data:
+summary(dat_delomys)
+```
+### Shapiro Tests
+``` {r shapiro, echo = FALSE}
+## test the normality of body mass:
+shapiro.test(dat_delomys$body_mass)
 
-## Model Diagnostics
+## test the normality of body length:
+shapiro.test(dat_delomys$body_length)
 
-## Model Interpretation
+```
+
+Since both of these return a p-value that is much lower than .05, we know that our variables are not normally distributed.
+
+
+## Graphical Exploration {.tabset .tabset-pills}
+
+### Scatterplot
+
+```{r scatterDat, fig.asp = 1, echo = FALSE}
+## scatter plot of body length by body mass
+plot(dat_delomys$body_length, dat_delomys$body_mass, 
+     main = "Delomys Body Length and Body Mass", 
+     xlab = "Body Length", ylab = "Body Mass")
+```
+
+### Histograms
+```{r massHist, echo = FALSE}
+## body mass histogram
+
+hist(dat_delomys$body_mass, breaks = 20,
+     main = "Histogram of Delomys Body Mass",
+     xlab = "Body Mass")
+
+## body length histogram
+
+hist(dat_delomys$body_length, breaks = 20,
+     main = "Histogram of Delomy Body Length",
+     xlab = "Body Length")
+
+```
+
+
+### Boxplots
+```{r, echo = FALSE, fig.asp=1}
+
+## body mass conditioned on species
+
+boxplot(body_mass ~ binomial, 
+        data = dat_delomys, 
+        main = "Delomys Body Mass by Species", 
+        xlab = "Species", ylab = "Body Mass")
+
+## body mass conditioned on sex
+
+boxplot(body_mass ~ sex, 
+        data = dat_delomys, 
+        main = "Delomys Body Mass by Sex", 
+        xlab = "Sex", ylab = "Body Mass")
+
+## body mass conditioned on both
+
+boxplot(body_mass ~ sex*binomial, 
+        data = dat_delomys, 
+        names=c("Female \n D. dorsalis", 
+                "Male \n D.dorsalis", "Female \n D. sub", "Male \n D. sub"),
+        xlab = NULL, 
+        ylab = "Body Mass", 
+        main = "Delomys Body Mass by Species and Sex", 
+        las =2)
+
+```
+
+### Interpretation
+
+1. It appears that body mass and length have a linear relationship. It appears visually that the have a positive linear relationship, with several outliers that have much longer body length.
+
+2. The histograms appear to have a somewhat normal distribution. Body mass histogram appears more normal, and body length, again appears to have several outliers positively.
+
+3. Given the low p-values of the shapiro test for both variables, it seems that they are not normally distributed. Visually, body mass appears to be normally distributed. Length only appears somewhat normally distributed visually. Unconditioned, I would say neither is normally distributed.
+
+4. Based on the conditional boxplots, it appears that D.Dorsalis has a greater body mass, and that the males of both species have a greater body mass as well. The difference in mean body mass between the sexes is greateer in D. Dorsalis, but is present in both species.
+
+
+## Model Building 
+
+Now we construct the models:
+
+```{r}
+
+fit1 <- lm(body_length ~ body_mass, data = dat_delomys) ## simple linear regression
+fit2 <- lm(body_mass ~ sex, data = dat_delomys)   ## 1-way ANOVA
+fit3 <- lm(body_mass ~ binomial, data = dat_delomys)  ## 1-way ANOVA
+fit4 <- lm(body_mass ~ sex + binomial, data = dat_delomys) ## 2-way additive ANOVA  
+fit5 <- lm(body_mass ~ sex*binomial, data = dat_delomys) ## 2-way factorial ANOVA
+
+```
+
+
+## Model Diagnostics {.tabset .tabset-pills}
+
+### Visual Diagnostic
+
+Here we use histograms of the residuals as a visual diagnostic:
+
+```{r echo = FALSE}
+
+hist(residuals(fit1), breaks = 20, 
+     main = "Histogram of Residuals of Fit 1")
+hist(residuals(fit2), breaks = 20, 
+     main = "Histogram of Residuals of Fit 2")
+hist(residuals(fit3), breaks = 20, 
+     main = "Histogram of Residuals of Fit 3")
+hist(residuals(fit4), breaks = 20, 
+     main = "Histogram of Residuals of Fit 4")
+hist(residuals(fit5), breaks = 20, 
+     main = "Histogram of Residuals of Fit 5")
+
+```
+
+### Numerical Diagnostic
+
+Here we use the Shapiro-Wilk test on the residuals of our models as a numerical diagnostic:
+
+```{r echo = FALSE}
+
+shapiro.test(residuals(fit1))
+shapiro.test(residuals(fit2))
+shapiro.test(residuals(fit3))
+shapiro.test(residuals(fit4))
+shapiro.test(residuals(fit5))
+
+```
+
+### Interpretation
+
+1. Although visually many of the models appear to have a normal distribution, they all return values that demonstrate a violation of the normality assumption under a Shapiro-Wilk normality test.
+
+2. Not all of the models violate the normality assumption with equal severity. While Fit 1, the linear model, appears violate with the most severity, Fit 2, the one way ANOVA based on Sex, appears to have the residuals closest to normality of the models that we have fit.
+
+
+## Model Interpretation {.tabset .tabset-pills}
+
+### Body Length
+
+#### Model Coefficient Table: Body Length ~ Body Mass
+```{r, echo=FALSE}
+
+## print model coefficient table
+
+knitr::kable(coef(summary(fit1)))
+
+```
+
+#### Interpretation
+
+- The magnitude of the mass / length relationship is 0.875
+- The expected body length of an animal that weighs 100g would be 163
+- The expected body length of an animal that weight 0 G would be 76
+
+
+
+
+### Body Mass: Model Coefficients
+
+#### Model Coefficient Table: Body Mass ~ Sex
+
+```{r, echo=FALSE}
+## print model coefficient table 
+## fit 2 ( mass x sex)
+
+knitr::kable(coef(summary(fit2)))
+```
+
+#### Model Coefficient Table: Body Mass ~ Species
+```{r, echo=FALSE}
+## print model coefficient table
+## fit 3 ( mass x species)
+
+knitr::kable(coef(summary(fit3)))
+
+```
+
+#### Interpretation
+
+- The base level for sex is female.
+- The base level for binomial is D. Dorsalis
+- Male is heavier, as you can see by the positive coefficient from the base
+- D. Dorsalis is heavier, as you can see by the negative coefficient from the base
+
+
+
+### Body Mass: ANOVA
+
+#### ANOVA Table: body_mass ~ sex + binomial
+
+```{r, echo=FALSE}
+## print ANOVA table
+## fit 4 body_mass ~ sex + binomial
+
+knitr::kable(anova(fit4))
+
+```
+
+#### ANOVA Table: body_mass ~ sex * binomial
+```{r, echo=FALSE}
+## print ANOVA table
+## fit 5 body_mass ~ sex * binomial
+
+knitr::kable(anova(fit5))
+
+```
+
+#### Interpretation
+
+- Sex or species alone are not a significant predictor of body mass.
+- However, there is a significant interaction between the two.
+- The significance differs between the single-predictor, additive, and interactive models. While there appears to be no significance to single-predictor or additive models, the interactive model is significant when both variables are used. While sex or species alone are not significant predictors, taken together as an interaction they are.
+
+
 
 ## Model Comparison : Body Mass
+
+Finally, we will compare our models using Akaike Information Criterion (AIC)
+
+#### AIC: Model 1
+```{r, echo=FALSE}
+## AIC: Model 1
+AIC(fit1)
+```
+#### AIC: Model 2
+```{r, echo=FALSE}
+## AIC: Model 2
+AIC(fit2)
+```
+#### AIC: Model 3
+```{r, echo=FALSE}
+## AIC: Model 3
+AIC(fit3)
+```
+#### AIC: Model 4
+```{r, echo=FALSE}
+## AIC: Model 4
+AIC(fit4)
+```
+#### AIC: Model 5
+```{r, echo=FALSE}
+## AIC: Model 5
+AIC(fit5)
+```
+
+#### Interpretation
+
+- Models 2 and 4 have the lowest AIC.
+- Though model 2 has a much lower AIC than model 4, in this case I would select model 4, because in this case I think that the added complexity and reduced ease of understanding would be worth the extra insight gained. Also from our previous inquiry, I know that this model creates more significance, and provides more more insight for only a small gain in complexity. 
+
+
 
 
 

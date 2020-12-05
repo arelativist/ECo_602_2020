@@ -1,5 +1,5 @@
 ### Import data
-dat_delomys = read.csv(here::here("data","delomys.csv"))
+dat_delomys = read.csv("data/delomys.csv")
 
 ##explore
 head(dat_delomys)
